@@ -59,7 +59,7 @@ def main(_):
   gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.4)
   with tf.Session(config=tf.ConfigProto(log_device_placement=False,gpu_options=gpu_options)) as sess:
     sess.run(tf.global_variables_initializer())
-    for i in range(20000):
+    for i in range(200):
       batch = mnist.train.next_batch(50)
       if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict={
@@ -69,9 +69,7 @@ def main(_):
 
     print('test accuracy %g' % accuracy.eval(feed_dict={
         x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
-   # model_location = tempfile.mkdtemp()
     save_path = saver.save(sess,"mnist_cnn_model.ckpt")
-    #print('Saving model to: %s' % model_location)
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
