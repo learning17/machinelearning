@@ -45,10 +45,10 @@ if __name__ == '__main__':
             _,loss = sess.run([train_step,cross_entropy],feed_dict={x: batch_x, y_: batch_y, keep_prob: 0.75})
             print ('step:%d,loss:%f' % (step,loss))
             if step % 100 == 0:
-                #batch_x_test,batch_y_test = next(captcha.gen_captcha(100))
-                acc = sess.run(accuracy, feed_dict={x: batch_x, y_: batch_y, keep_prob: 1.})
+                batch_x_test,batch_y_test = next(captcha.gen_captcha(100))
+                acc = sess.run(accuracy, feed_dict={x: batch_x_test, y_: batch_y_test, keep_prob: 1.})
                 print ('###############################################step:%d,accuracy:%f' % (step,acc))
-                if acc > 0.9:
+                if acc > 0.99:
                     saver.save(sess,"capcha_model.ckpt")
                     break
             step += 1
