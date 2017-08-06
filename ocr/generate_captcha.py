@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*
 #################################################################
 #
 #    file: generate_captcha.py
@@ -58,9 +59,11 @@ class generateCaptcha():
         captcha_str = ''.join(random.sample(self.characters,self.char_num))
         img = image.generate_image(captcha_str)
         img.save(captcha_str + '.jpg')
-'''
+
 g = generateCaptcha()
 g.gen_test_captcha()
+
+'''
 g = generateCaptcha()
 X,Y = next(g.gen_captcha(1))
 print np.shape(X)
