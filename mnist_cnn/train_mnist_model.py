@@ -59,7 +59,7 @@ def main(_):
   gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.4)
   with tf.Session(config=tf.ConfigProto(log_device_placement=False,gpu_options=gpu_options)) as sess:
     sess.run(tf.global_variables_initializer())
-    for i in range(200):
+    for i in range(20000):
       batch = mnist.train.next_batch(50)
       if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict={
