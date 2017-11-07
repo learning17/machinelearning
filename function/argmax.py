@@ -15,6 +15,8 @@ a = tf.constant(L,shape=[2,3,4])
 b = tf.argmax(a,axis=0)
 c = tf.argmax(a,axis=1)
 d = tf.argmax(a,axis=2)
+print L
+print ("##################################")
 with tf.Session() as sess:
     print sess.run(a)
     print ("##################################")
