@@ -16,5 +16,5 @@ x = tf.placeholder(tf.float32,[None,10])
 y = tf.matmul(x,x)
 with tf.Session() as sess:
     rand_array = np.random.rand(10,10)
-    print sess.run(y,feed_dict={x:rand_array})
+    print(sess.run(y,feed_dict={x:rand_array}))
 
