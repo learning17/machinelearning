@@ -19,7 +19,8 @@ def conv_relu(kernel_shape, bias_shape):
     return None
 
 def my_image_filter():
-    with tf.variable_scope("conv1"):#Variables created here will be named "conv1/weights", "conv1/biases".
+    scope = "wang"
+    with tf.variable_scope(scope or "conv1"):#Variables created here will be named "conv1/weights", "conv1/biases".
         relu1 = conv_relu([5, 5, 32, 32], [32])
     with tf.variable_scope("conv2"):#Variables created here will be named "conv2/weights", "conv2/biases".
         return conv_relu([5, 5, 32, 32], [32])
