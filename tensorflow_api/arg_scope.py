@@ -23,10 +23,18 @@ def show(a,b):
     print(a,b)
 
 @add_arg_scope
-def play(a,b):
-    print(a,b)
+def play(c,d):
+    print(c,d)
 
-with arg_scope([show,play],a='a',b="b"):
-    show()
-    play()
+def all_arg_scope():
+    with arg_scope([show],a='a'):
+        with arg_scope([play],c='c') as arg_sc:
+            return arg_sc
+def test():
+    with arg_scope([show,play]):
+        with arg_scope([show],a='a1'):
+            show(b='b')
+            play(d='d')
 
+with arg_scope(all_arg_scope()):
+    test()
