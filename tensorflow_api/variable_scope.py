@@ -48,7 +48,8 @@ def conv_relu(kernel_shape, bias_shape):
     biases = tf.get_variable("biases", bias_shape, initializer=tf.constant_initializer(0.0))
     return None
 def my_image_filter1():
-    with tf.variable_scope("conv1"):
+    with tf.variable_scope("conv1") as scope:
+        print("2" + scope.original_name_scope)
         relu1 = conv_relu([5, 5, 32, 32], [32])
     with tf.variable_scope("conv2"):
         return conv_relu( [5, 5, 32, 32], [32])
