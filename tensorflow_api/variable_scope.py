@@ -55,6 +55,7 @@ def my_image_filter1():
 
 def test_get_variable():
     with tf.variable_scope("image_filters") as scope:
+        print(scope.original_name_scope)
         result1 = my_image_filter1()
         scope.reuse_variables()
         result2 = my_image_filter1()
