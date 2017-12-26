@@ -21,8 +21,8 @@ e = tf.constant(np.arange(1,13,dtype=np.int32),shape=[2,2,3])
 f = tf.constant(np.arange(13,25,dtype=np.int32),shape=[2,3,2])
 g = tf.matmul(e,f)
 with tf.Session() as sess:
-        print sess.run(a)
-        print ("##################################")
+        print (sess.run(a))
+        '''print ("##################################")
         print sess.run(b)
         print ("##################################")
         print sess.run(c)
@@ -31,4 +31,4 @@ with tf.Session() as sess:
         print ("##################################")
         print sess.run(f)
         print ("##################################")
-        print sess.run(g)
+        print sess.run(g)'''

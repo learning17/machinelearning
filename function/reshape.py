@@ -20,11 +20,12 @@ r2 = tf.reshape(a,[2,2,2])
 r3 = tf.reshape(a,[-1,2])
 r4 = tf.reshape(a,[-1])
 with tf.Session() as sess:
-    print sess.run(r1)
+    '''print (sess.run(r1))
     print ("##################################")
-    print sess.run(r2)
+    print (sess.run(r2)))
     print ("##################################")
-    print sess.run(r3)
+    print (sess.run(r3))
     print ("##################################")
-    print sess.run(r4)
+    print (sess.run(r4))'''
+    print(r2.shape)
 
