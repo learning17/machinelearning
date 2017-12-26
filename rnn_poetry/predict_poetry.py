@@ -51,4 +51,3 @@ if __name__ == '__main__':
             predict, next_state = sess.run([probs, last_state], feed_dict=feed)
             word = to_word(predict)
         print poem
-
