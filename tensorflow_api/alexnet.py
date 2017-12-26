@@ -129,12 +129,11 @@ def alexnet_v2(inputs,
             scope='fc8')
 
       # Convert end_points_collection into a end_point dict.
-      print(end_points_collection)
       end_points = utils.convert_collection_to_dict(end_points_collection)
-      print(end_points)
       if spatial_squeeze:
         net = array_ops.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
+      print(end_points)
       return net, end_points
 
 
