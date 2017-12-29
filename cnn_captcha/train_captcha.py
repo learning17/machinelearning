@@ -49,7 +49,7 @@ if __name__ == '__main__':
                 acc = sess.run(accuracy, feed_dict={x: batch_x_test, y_: batch_y_test, keep_prob: 1.})
                 print ('###############################################step:%d,accuracy:%f' % (step,acc))
                 if acc > 0.99:
-                    saver.save(sess,"capcha_model.ckpt")
+                    saver.save(sess,"./capcha_model.ckpt")
                     break
             step += 1
 
