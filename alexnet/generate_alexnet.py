@@ -6,6 +6,8 @@ from scipy.misc import imresize
 from scipy.misc import imread
 from tensorflow.python.framework.ops import convert_to_tensor
 from caffe_classes import class_names
+import os
+import random
 
 IMAGENET_MEAN = tf.constant([123.68, 116.779, 103.939], dtype=tf.float32) #RGB
 
@@ -22,6 +24,7 @@ class ImageDataGenerator(object):
         self.mode = hparams.mode
         self.batch_size = hparams.batch_size
         self.num_classes = hparams.num_classes
+        self.shuffle = hparams.shuffle
         self.buffer_size = 1000
 
         self._read_txt_file()
@@ -43,6 +46,30 @@ class ImageDataGenerator(object):
             for j in range(5):
                 print("  ",class_names[index[-1-j]],output[i,index[-1-j]])
 
+    @classmethod
+    def get_image_path_label(cls, file_dir, train_file='train.txt',
+                             val_file = 'val.txt', pref_path='data/train/'):
+        label_dir = {'cat':0, 'dog':1}
+        img_format = ['jpg', 'png']
+        val_ratio = 0.3
+        with open(train_file,'w') as trainf,open(val_file,'w') as valf:
+            for filename in os.listdir(file_dir):
+                segs = filename.split('.')
+                if len(segs) == 3 and segs[0] in label_dir and segs[2] in img_format:
+                    label = label_dir.get(segs[0],-1)
+                else:
+                    label = -1
+                    print("illegal image filename:%s" % filename)
+                    continue
+                ran = random.random()
+                line = "{}{} {}\n".format(pref_path,filename,label)
+                if ran <= val_ratio:
+                    valf.write(line)
+                else:
+                    trainf.write(line)
+            valf.close()
+            trainf.close()
+
     def _read_txt_file(self):
         self.img_paths = list()
         self.labels = list()
@@ -56,7 +83,7 @@ class ImageDataGenerator(object):
     def _parse_function(self,filename, label):
         one_hot = tf.one_hot(label, self.num_classes)
         img = tf.read_file(filename)
-        img_decoded = tf.image.decode_png(img,channels=3)
+        img_decoded = tf.image.decode_jpeg(img,channels=3)
         img_resized = tf.image.resize_images(img_decoded, [227, 227])
         img_centered = tf.subtract(img_resized, IMAGENET_MEAN)
         # RGB -> BGR
@@ -71,8 +98,8 @@ class ImageDataGenerator(object):
 
     def get_iterator(self):
         data = tf.data.Dataset.from_tensor_slices((self.img_paths, self.labels))
-        output_buffer_size = 100*self.batch_size
-        data = data.shuffle(output_buffer_size)
+        if self.shuffle:
+            data = data.shuffle(100*self.batch_size)
         if self.mode == "training":
             data = data.map(self._parse_function_train,num_parallel_calls=8)
         elif self.mode == "inference":

@@ -4,13 +4,12 @@ import numpy as np
 
 class AlexNet(object):
     def __init__(self, X, keep_prob, num_classes = 1000,
-                 skip_layer=list(), weights_path='bvlc_alexnet.npy'):
+                 train_layers=list(), weights_path='bvlc_alexnet.npy'):
         self.X = X
         self.keep_prob = keep_prob
         self.num_classes = num_classes
-        self.skip_layer = skip_layer
+        self.train_layers = train_layers
         self.weights_path = weights_path
-        self.create_model()
 
     def conv(self, X, filter_height, filter_width, num_filters,
              stride_y, stride_x, name, padding='SAME', groups=1):
@@ -93,7 +92,38 @@ class AlexNet(object):
         fc7 = self.fc(dropout6, 4096, name='fc7')
         dropout7 = self.dropout(fc7, self.keep_prob, name='dropout7')
 
-        self.fc8 = self.fc(dropout7, self.num_classes, relu=False, name='fc8')
+        fc8 = self.fc(dropout7, self.num_classes, relu=False, name='fc8')
+        return fc8
+
+    def cross_entropy(self, logits, labels):
+        with tf.name_scope("cross_entropy"):
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
+
+            loss_summary = list()
+            loss_summary.append(tf.summary.scalar("cross_entropy", loss))
+        return loss, loss_summary
+
+    def optimizer(self,loss, learning_rate):
+        with tf.name_scope("optimizer_model"):
+            tvars = [v for v in tf.trainable_variables() if v.name.split('/')[0] in self.train_layers]
+            clipped_gradient, gradient_norm = tf.clip_by_global_norm(tf.gradients(loss, tvars), 5)
+            optimizer = tf.train.AdamOptimizer(learning_rate)
+            train_op = optimizer.apply_gradients(zip(clipped_gradient, tvars))
+
+            gradient_summary = list()
+            gradient_summary.append(tf.summary.scalar("clipped_gradient", tf.global_norm(clipped_gradient)))
+            gradient_summary.append(tf.summary.scalar("gradient_norm", gradient_norm))
+            gradient_summary.append(tf.summary.scalar("learning_rate",learning_rate))
+        return train_op, gradient_summary
+
+    def accuracy(self, logits, labels):
+        with tf.name_scope("accuracy"):
+            correct_pred = tf.equal(tf.argmax(logits,1), tf.argmax(labels, 1))
+            accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
+
+            accuracy_summary = list()
+            accuracy_summary.append(tf.summary.scalar("accuracy", accuracy))
+        return accuracy, accuracy_summary
 
     def initial_weights(self,sess):
         '''
@@ -101,7 +131,7 @@ class AlexNet(object):
         '''
         weights_dict = np.load(self.weights_path, encoding='bytes').item()
         for op_name in weights_dict:
-            if op_name not in self.skip_layer:
+            if op_name not in self.train_layers:
                 with tf.variable_scope(op_name, reuse=True):
                     for data in weights_dict[op_name]:
                         #Biases
