@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 if len(previous_losses) > 2 and loss > max(previous_losses[-3:]):
                     sess.run(model.learning_rate_decay_op)
                 previous_losses.append(loss)
-                model.saver.save(sess, "chatbot.ckpt", global_step=model.global_step)
+                model.saver.save(sess, "./chatbot.ckpt", global_step=model.global_step)
                 loss = 0.0
             '''if step % 5000 == 0:
                 for bucket_id in range(len(generate_chat._buckets)):
