@@ -12,16 +12,19 @@ if __name__ == '__main__':
             num_classes = 2,
             shuffle = True)
         tr_data = ImageDataGenerator(hparams)
+        tr_iterator = tr_data.get_iterator()
 
         hparams.txt_file = "val.txt"
         hparams.mode = "inference"
         hparams.shuffle = False
-        tr_data = ImageDataGenerator(hparams)
+        val_data = ImageDataGenerator(hparams)
+        val_iterator = val_data.get_iterator()
 
     X = tf.placeholder(tf.float32, [None, 227, 227, 3])
     y = tf.placeholder(tf.float32,[None,hparams.num_classes])
     keep_prob = tf.placeholder(tf.float32)
-    learning_rate = tf.placeholder(tf.float32)
+    #learning_rate = tf.placeholder(tf.float32)
+    learning_rate = tf.Variable(0.0, trainable=False)
     train_layers = ['fc8', 'fc7', 'fc6']
 
     model = AlexNet(X, keep_prob, hparams.num_classes,train_layers)
@@ -33,11 +36,53 @@ if __name__ == '__main__':
 
     saver = tf.train.Saver()
     with tf.Session() as sess:
-        sess.run(tf.global_variables_initializer())
+        #model initialize
+        ckpt = tf.train.get_checkpoint_state('./ckpt')
+        if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
+            print("Reading model parameters from %s" % ckpt.model_checkpoint_path)
+            saver.restore(sess, ckpt.model_checkpoint_path)
+        else:
+            print("Created model with fresh parameters.")
+            sess.run(tf.global_variables_initializer())
+            model.initial_weights(sess)
+
+        #data initialize
         sess.run(tf.tables_initializer())
+        sess.run(tr_iterator.initializer)
+        sess.run(val_iterator.initializer)
         sess.run(tf.assign(learning_rate, 0.02 * 0.97 ))
-
-        summary_writer = tf.summary.FileWriter("train_chatbot", sess.graph)
-
-
-
+        summary_writer = tf.summary.FileWriter("train_alexnet", sess.graph)
+        step = 0
+        epoch = 0
+        while True:
+            #train
+            step = model.global_step.eval()
+            try:
+                img_batch,labels_batch = sess.run([tr_iterator.img_batch,tr_iterator.labels_batch])
+                _,train_loss,step_summary = sess.run([train_op, loss, train_summary],feed_dict={X:img_batch,
+                                                                                           y:labels_batch,
+                                                                                           keep_prob:0.5})
+                print("train step:%d,loss:%f" % (step,train_loss))
+                summary_writer.add_summary(step_summary, step)
+            except tf.errors.OutOfRangeError:
+                epoch += 1
+                sess.run(tf.assign(learning_rate, 0.02 * (0.97 ** epoch)))
+                print("epoch:%d" % epoch)
+                sess.run(tr_iterator.initializer)
+                saver.save(sess,"./ckpt/alexnet.ckpt",global_step = step)
+                #val
+                val_acc = 0
+                val_count = 0
+                while True:
+                    try:
+                        img_batch,labels_batch = sess.run([val_iterator.img_batch,val_iterator.labels_batch])
+                        acc = sess.run(accuracy, feed_dict={X:img_batch,
+                                                            y:labels_batch,
+                                                            keep_prob:1.0})
+                        val_acc += acc
+                        val_count += 1
+                    except tf.errors.OutOfRangeError:
+                        val_acc /= val_count
+                        print("val Accuracy=%f" % val_acc)
+                        sess.run(val_iterator.initializer)
+                        break

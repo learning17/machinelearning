@@ -116,20 +116,29 @@ class ImageDataGenerator(object):
 
 '''
 hparams = tf.contrib.training.HParams(
-    txt_file = "imageNet",
+    txt_file = "train.txt",
     mode = "training",
-    batch_size = 1,
-    num_classes = 1000)
-img = ImageDataGenerator(hparams)
-iterator = img.get_iterator()
-img_batch = iterator.img_batch
-labels_batch = iterator.labels_batch
+    batch_size = 64,
+    num_classes = 2,
+    shuffle = True)
+tr_data = ImageDataGenerator(hparams)
+tr_iterator = tr_data.get_iterator()
+
+hparams.txt_file = "val.txt"
+hparams.mode = "inference"
+hparams.shuffle = False
+val_data = ImageDataGenerator(hparams)
+val_iterator = val_data.get_iterator()
+
 with tf.Session() as sess:
     tf.tables_initializer().run()
-    sess.run(iterator.initializer)
-    for i in range(1):
+    sess.run(tr_iterator.initializer)
+    sess.run(val_iterator.initializer)
+    for i in range(1000):
         try:
-            print(sess.run([img_batch,labels_batch]))
+            sess.run([tr_iterator.img_batch,tr_iterator.labels_batch])
+            print(i)
         except tf.errors.OutOfRangeError:
             print("OutOfRangeError")
-            sess.run(iterator.initializer)'''
+            sess.run(tr_iterator.initializer)
+            print(sess.run([val_iterator.img_batch,val_iterator.labels_batch]))'''

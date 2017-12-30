@@ -10,6 +10,7 @@ class AlexNet(object):
         self.num_classes = num_classes
         self.train_layers = train_layers
         self.weights_path = weights_path
+        self.global_step = tf.Variable(1, trainable=False)
 
     def conv(self, X, filter_height, filter_width, num_filters,
              stride_y, stride_x, name, padding='SAME', groups=1):
@@ -97,7 +98,7 @@ class AlexNet(object):
 
     def cross_entropy(self, logits, labels):
         with tf.name_scope("cross_entropy"):
-            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=labels))
 
             loss_summary = list()
             loss_summary.append(tf.summary.scalar("cross_entropy", loss))
@@ -108,7 +109,7 @@ class AlexNet(object):
             tvars = [v for v in tf.trainable_variables() if v.name.split('/')[0] in self.train_layers]
             clipped_gradient, gradient_norm = tf.clip_by_global_norm(tf.gradients(loss, tvars), 5)
             optimizer = tf.train.AdamOptimizer(learning_rate)
-            train_op = optimizer.apply_gradients(zip(clipped_gradient, tvars))
+            train_op = optimizer.apply_gradients(zip(clipped_gradient, tvars),global_step=self.global_step)
 
             gradient_summary = list()
             gradient_summary.append(tf.summary.scalar("clipped_gradient", tf.global_norm(clipped_gradient)))
