@@ -2,6 +2,19 @@
 from alexnet import AlexNet
 from generate_alexnet import ImageDataGenerator
 import tensorflow as tf
+import logging
+import logging.handlers
+handler = logging.handlers.RotatingFileHandler(
+    "train_alexnet.log",
+     maxBytes=5*1024*1024,
+    backupCount=100,
+    encoding='utf-8')
+fmt = '%(asctime)s|%(message)s'
+formatter = logging.Formatter(fmt)
+handler.setFormatter(formatter)
+logger = logging.getLogger("train_chatbot")
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 if __name__ == '__main__':
     with tf.device('/cpu:0'):
@@ -59,15 +72,15 @@ if __name__ == '__main__':
             step = model.global_step.eval()
             try:
                 img_batch,labels_batch = sess.run([tr_iterator.img_batch,tr_iterator.labels_batch])
-                _,train_loss,step_summary = sess.run([train_op, loss, train_summary],feed_dict={X:img_batch,
+                _,acc,train_loss,step_summary = sess.run([train_op,accuracy, loss, train_summary],feed_dict={X:img_batch,
                                                                                            y:labels_batch,
                                                                                            keep_prob:0.5})
-                print("train step:%d,loss:%f" % (step,train_loss))
+                logger.debug("train step:%d,loss:%f,acc:%f" % (step,train_loss,acc))
                 summary_writer.add_summary(step_summary, step)
             except tf.errors.OutOfRangeError:
                 epoch += 1
                 sess.run(tf.assign(learning_rate, 0.02 * (0.97 ** epoch)))
-                print("epoch:%d" % epoch)
+                logger.debug("epoch:%d" % epoch)
                 sess.run(tr_iterator.initializer)
                 saver.save(sess,"./ckpt/alexnet.ckpt",global_step = step)
                 #val
@@ -83,6 +96,7 @@ if __name__ == '__main__':
                         val_count += 1
                     except tf.errors.OutOfRangeError:
                         val_acc /= val_count
-                        print("val Accuracy=%f" % val_acc)
+                        logger.debug("val Accuracy=%f" % val_acc)
                         sess.run(val_iterator.initializer)
                         break
+

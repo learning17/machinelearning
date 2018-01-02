@@ -34,8 +34,9 @@ class ImageDataGenerator(object):
     @classmethod
     def get_image(cls,filename):
         img = (imread(filename)[:,:,:3]).astype(np.float32)
+        img = imresize(img,[227,227])
         img = img - np.mean(img)
-        img[:, :, 0], img[:, :, 2] = img[:, :, 2], img[:, :, 0]
+        img = img[:, :, ::-1]
         return img
 
     @classmethod
@@ -85,7 +86,8 @@ class ImageDataGenerator(object):
         img = tf.read_file(filename)
         img_decoded = tf.image.decode_jpeg(img,channels=3)
         img_resized = tf.image.resize_images(img_decoded, [227, 227])
-        img_centered = tf.subtract(img_resized, IMAGENET_MEAN)
+        img_centered = tf.subtract(tf.divide(img_resized,127.5),1)
+        #img_centered = tf.subtract(img_resized, tf.reduce_mean(img_resized))
         # RGB -> BGR
         img_bgr = img_centered[:, :, ::-1]
         return img_bgr,one_hot
@@ -113,32 +115,19 @@ class ImageDataGenerator(object):
             initializer = iterator.initializer,
             img_batch = img_batch,
             labels_batch = labels_batch)
-
 '''
 hparams = tf.contrib.training.HParams(
     txt_file = "train.txt",
     mode = "training",
-    batch_size = 64,
+    batch_size = 2,
     num_classes = 2,
     shuffle = True)
 tr_data = ImageDataGenerator(hparams)
 tr_iterator = tr_data.get_iterator()
 
-hparams.txt_file = "val.txt"
-hparams.mode = "inference"
-hparams.shuffle = False
-val_data = ImageDataGenerator(hparams)
-val_iterator = val_data.get_iterator()
-
 with tf.Session() as sess:
     tf.tables_initializer().run()
     sess.run(tr_iterator.initializer)
-    sess.run(val_iterator.initializer)
-    for i in range(1000):
-        try:
-            sess.run([tr_iterator.img_batch,tr_iterator.labels_batch])
-            print(i)
-        except tf.errors.OutOfRangeError:
-            print("OutOfRangeError")
-            sess.run(tr_iterator.initializer)
-            print(sess.run([val_iterator.img_batch,val_iterator.labels_batch]))'''
+    img_batch = sess.run(tr_iterator.img_batch)
+    print(img_batch)
+'''

@@ -11,10 +11,11 @@ if __name__ == '__main__':
     X = tf.placeholder(tf.float32, [None, 227, 227, 3])
     keep_prob = tf.placeholder(tf.float32)
     model = AlexNet(X,keep_prob)
-    prob = tf.nn.softmax(model.fc8)
+    y_ = model.create_model()
+    prob = tf.nn.softmax(y_)
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         model.initial_weights(sess)
-        output =  sess.run(prob,feed_dict={X: [test_x], keep_prob: 1})
+        y_,output =  sess.run([y_,prob],feed_dict={X: [test_x], keep_prob: 1})
         ImageDataGenerator.predict(output)
 
