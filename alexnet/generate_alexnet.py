@@ -35,6 +35,7 @@ class ImageDataGenerator(object):
     def get_image(cls,filename):
         img = (imread(filename)[:,:,:3]).astype(np.float32)
         img = imresize(img,[227,227])
+        #img = img/127.5 - 1.
         img = img - np.mean(img)
         img = img[:, :, ::-1]
         return img

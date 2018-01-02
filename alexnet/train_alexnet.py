@@ -99,4 +99,6 @@ if __name__ == '__main__':
                         logger.debug("val Accuracy=%f" % val_acc)
                         sess.run(val_iterator.initializer)
                         break
+                if val_acc > 0.97:
+                    break
 
