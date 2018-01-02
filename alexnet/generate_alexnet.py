@@ -87,8 +87,8 @@ class ImageDataGenerator(object):
         img = tf.read_file(filename)
         img_decoded = tf.image.decode_jpeg(img,channels=3)
         img_resized = tf.image.resize_images(img_decoded, [227, 227])
-        img_centered = tf.subtract(tf.divide(img_resized,127.5),1)
-        #img_centered = tf.subtract(img_resized, tf.reduce_mean(img_resized))
+        #img_centered = tf.subtract(tf.divide(img_resized,127.5),1)
+        img_centered = tf.subtract(img_resized, tf.reduce_mean(img_resized))
         # RGB -> BGR
         img_bgr = img_centered[:, :, ::-1]
         return img_bgr,one_hot
