@@ -15,7 +15,9 @@ AlexNet 是具有历史意义的一个网络结构，在此之前，深度学习
 ### ReLU
 
 ![](https://deeplearning-1254072688.cos.ap-guangzhou.myqcloud.com/alexnet/alexnet_2.png)
+
 $f(x)=max(0,z)$
+
 优点：
 * 在输入大于 0 时候，不会出现梯度消失；
 * 相较于 sigmoid 和 tanh 收敛速度大大提升，不含有 exp 运算，计算速度提升。
@@ -28,6 +30,7 @@ $f(x)=max(0,z)$
 ### Data Augmentation
 
 神经网络是靠数据喂出来的，同时扩大数据集合可以有效地解决过拟合问题，可以通过一些简单的变换从已有的训练数据集中生成一些新的数据，来扩充训练数据集。
+
 * `镜像对称（Mirroring）`
 
 ![](https://deeplearning-1254072688.cos.ap-guangzhou.myqcloud.com/alexnet/alexnet_3.png)
