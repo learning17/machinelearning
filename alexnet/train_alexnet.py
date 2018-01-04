@@ -79,7 +79,7 @@ if __name__ == '__main__':
                 summary_writer.add_summary(step_summary, step)
             except tf.errors.OutOfRangeError:
                 epoch += 1
-                sess.run(tf.assign(learning_rate, 0.02 * (0.99 ** epoch)))
+                sess.run(tf.assign(learning_rate, 0.002 * (0.99 ** epoch)))
                 logger.debug("epoch:%d" % epoch)
                 sess.run(tr_iterator.initializer)
                 saver.save(sess,"./ckpt/alexnet.ckpt",global_step = step)

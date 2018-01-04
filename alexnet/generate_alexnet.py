@@ -49,11 +49,11 @@ class ImageDataGenerator(object):
                 print("  ",class_names[index[-1-j]],output[i,index[-1-j]])
 
     @classmethod
-    def get_image_path_label(cls, file_dir, train_file='train.txt',
+    def get_image_path_label(cls, file_dir='data/train/', train_file='train.txt',
                              val_file = 'val.txt', pref_path='data/train/'):
         label_dir = {'cat':0, 'dog':1}
         img_format = ['jpg', 'png']
-        val_ratio = 0.3
+        val_ratio = 0.15
         with open(train_file,'w') as trainf,open(val_file,'w') as valf:
             for filename in os.listdir(file_dir):
                 segs = filename.split('.')

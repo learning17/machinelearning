@@ -108,7 +108,8 @@ class AlexNet(object):
         with tf.name_scope("optimizer_model"):
             tvars = [v for v in tf.trainable_variables() if v.name.split('/')[0] in self.train_layers]
             clipped_gradient, gradient_norm = tf.clip_by_global_norm(tf.gradients(loss, tvars), 5)
-            optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+            #optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+            optimizer = tf.train.AdamOptimizer(learning_rate)
             train_op = optimizer.apply_gradients(zip(clipped_gradient, tvars),global_step=self.global_step)
 
             gradient_summary = list()
