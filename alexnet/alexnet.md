@@ -39,7 +39,7 @@ $$f(x)=max(0,z)$$
 
 在时间中增加的 RGB 值是根据某种概率分布来决定的。PCA 颜色增强，其含义是：比如图像呈现紫色，即主要含有红色和蓝色，绿色很少，那么 PCA 颜色增强就会对红色和蓝色增减很多，绿色变化相对少一点，所以使总体的颜色保持一致。
 ![](https://deeplearning-1254072688.cos.ap-guangzhou.myqcloud.com/alexnet/alexnet_5.png)
-
+$$\left[ I^{R}_{xy},I^{G}_{xy},I^{B}_{xy}\right]^{T}$$
 AlexNet Data Augmentation 做法是：
 * `Random Cropping`：从 $256\times256$ 的图像中随机裁剪 $224\times224$（包括 Mirroring 图像），相当于将样本增加 $(256-224)^{2}\times2=2048$；
 * `Color shifting`：用PCA方法。将每个像素的 RGB 值 $\left[ I^{R}_{xy},I^{G}_{xy},I^{B}_{xy}\right]^{T}$ 加上 $\left[p_{1},p_{2},p_{3}\right]\left[ \alpha_{1}\lambda_{1},\alpha_{2}\lambda_{2},\alpha_{3}\lambda_{3}\right]^{T}$ 其中 $p_{i}$ 和 $\lambda_{i}$ 分别是 RGB 值的 $3\times3$ 协方差矩阵的第 $i$ 个特征向量和特征值。$\alpha_{i}$ 是一个服从均值为 $0$，标准差为 $0.1$ 的高斯分布的高斯变量。
