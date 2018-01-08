@@ -2,6 +2,7 @@
 
 ## Architecture of the Network
 
+ax^{2} + by^{2} + c = 0
 ![](https://deeplearning-1254072688.cos.ap-guangzhou.myqcloud.com/alexnet/alexnet_1.png)
 <center> 图1</center >
 
