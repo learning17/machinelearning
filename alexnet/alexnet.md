@@ -1,11 +1,8 @@
-<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
 # TensorFlow - 基于 AlexNet 图像分类
 
 ## Architecture of the Network
 
-ax^{2} + by^{2} + c = 0
 ![](https://deeplearning-1254072688.cos.ap-guangzhou.myqcloud.com/alexnet/alexnet_1.png)
-<center> 图1</center >
 
 AlexNet 是具有历史意义的一个网络结构，在此之前，深度学习已经沉寂了很久。2012 年，AlexNet 在当年的 ImageNet 图像分类竞赛中，top-5 错误率比上一年的冠军下降了十个百分点，而且远远超过当年的第二名。网络结构如图 1，包含五层卷积层和三层全连接层，AlexNet 之所以能够成功，原因是：
 * `非线性激活函数`：ReLU；
