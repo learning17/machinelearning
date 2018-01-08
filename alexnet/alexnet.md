@@ -1,5 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script></script>
-
 # TensorFlow - 基于 AlexNet 图像分类
 
 ## Architecture of the Network
