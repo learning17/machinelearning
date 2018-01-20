@@ -3,6 +3,7 @@
 ## Architecture of the Network
 
 ![](https://deeplearning-1254072688.cos.ap-guangzhou.myqcloud.com/alexnet/alexnet_1.png)
+​                                                                                     图1
 
 AlexNet 是具有历史意义的一个网络结构，在此之前，深度学习已经沉寂了很久。2012 年，AlexNet 在当年的 ImageNet 图像分类竞赛中，top-5 错误率比上一年的冠军下降了十个百分点，而且远远超过当年的第二名。网络结构如图 1，包含五层卷积层和三层全连接层，AlexNet 之所以能够成功，原因是：
 * `非线性激活函数`：ReLU；
@@ -14,7 +15,9 @@ AlexNet 是具有历史意义的一个网络结构，在此之前，深度学习
 ### ReLU
 
 ![](https://deeplearning-1254072688.cos.ap-guangzhou.myqcloud.com/alexnet/alexnet_2.png)
-$$f(x)=max(0,z)$$
+
+​                                                                                   $f(x)=max(0,z)$
+
 优点：
 * 在输入大于 0 时候，不会出现梯度消失；
 * 相较于 sigmoid 和 tanh 收敛速度大大提升，不含有 exp 运算，计算速度提升。
@@ -27,6 +30,7 @@ $$f(x)=max(0,z)$$
 ### Data Augmentation
 
 神经网络是靠数据喂出来的，同时扩大数据集合可以有效地解决过拟合问题，可以通过一些简单的变换从已有的训练数据集中生成一些新的数据，来扩充训练数据集。
+
 * `镜像对称（Mirroring）`
 
 ![](https://deeplearning-1254072688.cos.ap-guangzhou.myqcloud.com/alexnet/alexnet_3.png)
