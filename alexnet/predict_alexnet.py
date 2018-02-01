@@ -40,5 +40,11 @@ def predict_dog_cat(filename):
         print(cat_dog_class_names[pred[0]])
 
 if __name__ == '__main__':
-    predict_dog_cat(sys.argv[1])
+    if len(sys.argv) != 3:
+        print("Useage:python type imageName")
+    else:
+        if sys.argv[1] == '1':
+            predict_imagenet(sys.argv[2])
+        else:
+            predict_dog_cat(sys.argv[2])
 

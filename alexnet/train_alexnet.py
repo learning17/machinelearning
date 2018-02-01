@@ -63,7 +63,7 @@ if __name__ == '__main__':
         sess.run(tf.tables_initializer())
         sess.run(tr_iterator.initializer)
         sess.run(val_iterator.initializer)
-        sess.run(tf.assign(learning_rate, 0.02 * 0.97 ))
+        sess.run(tf.assign(learning_rate, 0.001))
         summary_writer = tf.summary.FileWriter("train_alexnet", sess.graph)
         step = 0
         epoch = 0
@@ -79,7 +79,9 @@ if __name__ == '__main__':
                 summary_writer.add_summary(step_summary, step)
             except tf.errors.OutOfRangeError:
                 epoch += 1
-                sess.run(tf.assign(learning_rate, 0.002 * (0.99 ** epoch)))
+                if epoch % 10 == 0:
+                    n = epoch/10
+                    sess.run(tf.assign(learning_rate, 0.001 * (0.99 ** n)))
                 logger.debug("epoch:%d" % epoch)
                 sess.run(tr_iterator.initializer)
                 saver.save(sess,"./ckpt/alexnet.ckpt",global_step = step)
