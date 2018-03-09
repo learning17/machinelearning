@@ -2,7 +2,7 @@ import tensorflow as tf
 
 l2_reg = tf.contrib.layers.l2_regularizer(0.1)
 tmp = tf.constant([0,1,2,3],dtype=tf.float32)
-collections = [tf.GraphKeys.GLOBAL_VARIABLES, "test"]
+collections = [tf.GraphKeys.GLOBAL_VARIABLES,"test"]
 a=tf.get_variable("I_am_a",
                   regularizer=l2_reg,
                   initializer=tmp,
