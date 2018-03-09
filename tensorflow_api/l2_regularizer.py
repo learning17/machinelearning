@@ -2,11 +2,12 @@ import tensorflow as tf
 
 l2_reg = tf.contrib.layers.l2_regularizer(0.1)
 tmp = tf.constant([0,1,2,3],dtype=tf.float32)
-collections = [tf.GraphKeys.GLOBAL_VARIABLES,"test"]
+#collections = [tf.GraphKeys.GLOBAL_VARIABLES,"test"]
 a=tf.get_variable("I_am_a",
                   regularizer=l2_reg,
-                  initializer=tmp,
-                  collections=collections)
+                  shape=[1,2])
+                  #initializer=tmp,
+                  #collections=collections)
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     print(sess.run(a))
@@ -18,8 +19,8 @@ with tf.Session() as sess:
     keys = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)#regularizer定义会将a加入REGULARIZATION_LOSSES集合
     for key in keys:
         print(key.name)
-    keys = tf.get_collection("test")
-    for key in keys:
-        print(key.name)
+    #keys = tf.get_collection("test")
+    #for key in keys:
+        #print(key.name)
 
 
