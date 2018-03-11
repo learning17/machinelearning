@@ -64,7 +64,19 @@ def test_get_variable():
     for v in vs:
         print(v)
 
+def first_variable(name):
+    with tf.variable_scope(name) as scope:
+        weights = tf.get_variable("weights", [1,2], initializer=tf.random_normal_initializer())
+    return weights
+
+def second_variable(name):
+    with tf.variable_scope(name) as scope:
+        a = first_variable(scope)       #scope: <tf.Variable 'test/weights:0' shape=(1, 2) dtype=float32_ref>)
+    vs = tf.trainable_variables()       #name: <tf.Variable 'test/test/weights:0' shape=(1, 2) dtype=float32_ref>)
+    for v in vs:
+        print(v)
 
 #test_scope()
 #test_variable()
-test_get_variable()
+#test_get_variable()
+second_variable("test")
