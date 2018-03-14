@@ -14,4 +14,4 @@ import tensorflow as tf
 logits = tf.constant([[1.0,2.0,3.0],[1.0,2.0,3.0],[1.0,2.0,3.0]])
 y = tf.nn.softmax(logits)
 with tf.Session() as sess:
-    print sess.run(y)
+    print( sess.run(y))
