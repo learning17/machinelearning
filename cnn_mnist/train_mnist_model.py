@@ -68,11 +68,13 @@ def main(_):
 
         print('test accuracy %g' % accuracy.eval(feed_dict={
                 x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
-        save_path = saver.save(sess,"./mnist_cnn_model.ckpt")
+        save_path = saver.save(sess, FLAGS.model_dir + "/mnist_cnn_model.ckpt")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir', type=str,
       default='/tmp/tensorflow/mnist/input_data',help='Directory for storing input data')
+    parser.add_argument('--model_dir', type=str,
+      default='/tmp/tensorflow/mnist/input_data',help='Directory for storing model')
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
