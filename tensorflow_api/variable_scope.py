@@ -79,4 +79,5 @@ def second_variable(name):
 #test_scope()
 #test_variable()
 #test_get_variable()
-second_variable("test")
+#second_variable("test")
+test_get_variable()
